@@ -1,7 +1,12 @@
 <template>
   <q-page>
-     <q-spinner-ios v-if="loadingRepos" class="loading-spinner" />
-
+    <div class="loading" v-if="loadingRepos" >
+       <q-spinner 
+          color="primary"
+          size="3em"
+          :thickness="2" 
+        />
+    </div>
      <div v-else>
       <div class="col-12 title-container">
         <p class="title">MEUS REPOSITÓRIOS</p>
@@ -54,7 +59,7 @@ export default defineComponent({
     if (usuarioId.value) {
       fetchRepoitoriosData();
     }
-});
+  });
 
 
     return {
