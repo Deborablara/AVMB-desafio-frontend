@@ -3,8 +3,8 @@
     <q-card-section class="card-section">
       <div class="card-header">
         <div class="container-title">
-          <p class="card-title">Repositório 1</p>
-          <p class="create-at">Criado em: 28/09/2023 09:41</p>
+          <p class="card-title">{{ repositorio.nome }}</p>
+          <p class="create-at">{{criadoEm}}</p>
         </div>
       </div>
       <div class="button-container">
@@ -20,14 +20,28 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-} from 'vue';
+import { format } from 'date-fns';
+import {defineComponent} from 'vue';
 
  
 
 export default defineComponent({
   name: 'CardRepositorio',
+  props: {
+    repositorio: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup: (props) => {
+    const formatarDataCriacao = new Date(props.repositorio.dataHoraCriacao);
+    const criadoEm = format(formatarDataCriacao, 'dd/MM/yyyy HH:mm');
+
+    return {
+      criadoEm,
+    }
+  }
+
 });
 </script>
 

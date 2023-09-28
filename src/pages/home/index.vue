@@ -1,25 +1,29 @@
 <template>
   <q-page>
-     <div class="col-12 title-container">
-      <p class="title">MEUS REPOSITÓRIOS</p>
-    </div>
-      <div class="cards-container">
-        <CardRepositorio class="card" />
-        <CardRepositorio class="card" />
-        <CardRepositorio class="card" />
-        <CardRepositorio class="card" />
-        <CardRepositorio class="card" />
-        <CardRepositorio class="card" />
-        <CardRepositorio class="card" />
-        <CardRepositorio class="card" />
-        <CardRepositorio class="card" />
+     <q-spinner-ios v-if="loadingRepos" class="loading-spinner" />
+
+     <div v-else>
+      <div class="col-12 title-container">
+        <p class="title">MEUS REPOSITÓRIOS</p>
       </div>
+      <div class="cards-container">
+        <CardRepositorio
+          v-for="repositorio in repositorios"
+          :key="repositorio.id"
+          :repositorio="repositorio"
+          class="card"
+        />
+      </div>
+    </div>
+    
   </q-page>
 </template>
 
 
 <script lang="ts">
-import { defineComponent} from 'vue';
+import useNotify from 'src/composables/useNotify';
+import { getReposUsuario } from 'src/services/usuario';
+import { defineComponent, inject,  ref, watchEffect} from 'vue';
 import CardRepositorio from '../../components/cardRepositorio/index.vue';
 
 export default defineComponent({
@@ -27,16 +31,37 @@ export default defineComponent({
    components: {
     CardRepositorio, 
   },
-  data() {
-    return {
-      cards: [
-        { id: 1 },
-        { id: 2 },
-        { id: 3 },
-        { id: 4 },
-      ],
+   setup () {
+    const usuarioId = inject('usuarioId');
+    const loadingRepos = ref(true);
+    const repositorios = ref([]);
+    const {notifyError} = useNotify();
+
+    const fetchRepoitoriosData = async () => {
+      try {
+        const response = await getReposUsuario({idProprietario: usuarioId.value as string});
+        repositorios.value = response.data.response;
+
+      } catch (error) {
+        notifyError('Erro ao buscar usuário');
+      } finally {
+        loadingRepos.value = false;
+      }
     };
-  },
+
+
+   watchEffect(() => {
+    if (usuarioId.value) {
+      fetchRepoitoriosData();
+    }
+});
+
+
+    return {
+      loadingRepos,
+      repositorios,
+    }
+  }
   }
 );
 </script>

@@ -20,29 +20,18 @@
 
 <script lang="ts">
 import useNotify from '../../composables/useNotify';
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, onMounted, provide } from 'vue';
 import { getUsuarioId, getDadosUsuario } from '../../services/usuario';
 import { Usuario } from '../../services/types';
 
-const linksList = [
-  {
-    title: 'Home',
-    caption: '',
-    icon: 'home',
-    route: {name: 'home'}
-  },
-
-];
-
 export default defineComponent({
   name: 'MainLayout',
-
-
   setup () {
     const {notifySuccess, notifyError} = useNotify();
-    const leftDrawerOpen = ref(false)
+
     const usuarioId = ref('');
     const usuario = ref<Usuario | null>(null);
+    provide('usuarioId', usuarioId);
 
     const fetchUsuarioData = async () => {
       try {
@@ -65,15 +54,15 @@ export default defineComponent({
 
 
     return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
-      usuario
+      usuario,
+      usuarioId
     }
   }
+
+  
 });
+
+
 </script>
 
 <style lang="scss">
