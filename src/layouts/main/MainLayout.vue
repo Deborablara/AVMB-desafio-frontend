@@ -3,7 +3,7 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title class="logo-container">
-           <img src="../../assets/logo-avmb.png" alt="Minha Figura">
+           <img src="../../assets/img/logo-avmb.png" alt="Minha Figura">
         </q-toolbar-title>
         <div>
           {{ usuario?.nome}}

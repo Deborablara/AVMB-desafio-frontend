@@ -4,12 +4,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/main/MainLayout.vue'),
-    children: [{ path: '', name: 'home', component: () => import('pages/IndexPage.vue') }],
+    children: [{ path: '', name: 'home', component: () => import('src/pages/home/index.vue') }],
   },
 
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: () => import('src/pages/notFound/index.vue'),
   },
 ];
 
