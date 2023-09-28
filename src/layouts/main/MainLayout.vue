@@ -2,41 +2,15 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Menu
+        <q-toolbar-title class="logo-container">
+           <img src="../../assets/logo-avmb.png" alt="Minha Figura">
         </q-toolbar-title>
-
+        <div>
+          {{ usuario?.nome}}
+          <q-icon name="account_circle" size="sm" class="iconeUsuario"/>
+        </div>
       </q-toolbar>
     </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Menu
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
 
     <q-page-container>
       <router-view />
@@ -45,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import useNotify from '../composables/useNotify';
+import useNotify from '../../composables/useNotify';
 import { defineComponent, ref, onMounted } from 'vue';
-import { getUsuarioId, getDadosUsuario } from '../services/usuario';
-import EssentialLink from 'components/EssentialLink.vue';
+import { getUsuarioId, getDadosUsuario } from '../../services/usuario';
+import { Usuario } from '../../services/types';
 
 const linksList = [
   {
@@ -63,15 +37,12 @@ const linksList = [
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {
-    EssentialLink
-  },
 
   setup () {
     const {notifySuccess, notifyError} = useNotify();
     const leftDrawerOpen = ref(false)
-    const usuarioId = ref(null);
-    const usuario = ref(null);
+    const usuarioId = ref('');
+    const usuario = ref<Usuario | null>(null);
 
     const fetchUsuarioData = async () => {
       try {
@@ -81,7 +52,7 @@ export default defineComponent({
         const dadosResponse = await getDadosUsuario({ idUsuario: usuarioId.value });
         usuario.value = dadosResponse.data;
 
-        notifySuccess(`Bem-vindo(a) ${usuario.value.nome}`);
+        notifySuccess(`Bem-vindo(a) ${usuario?.value?.nome}`);
 
       } catch (error) {
         notifyError('Erro ao buscar usuário');
@@ -98,8 +69,14 @@ export default defineComponent({
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+      },
+      usuario
     }
   }
 });
 </script>
+
+<style lang="scss">
+  @import './style.scss';
+</style>
+
