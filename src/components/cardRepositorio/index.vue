@@ -13,6 +13,7 @@
           label="Ver envelopes" 
           class="button"
           icon="mail"
+          @click="verEnvelopes(repositorio.id)"
         />
       </div>
     </q-card-section>
@@ -21,7 +22,8 @@
 
 <script lang="ts">
 import { format } from 'date-fns';
-import {defineComponent} from 'vue';
+import { useRouter } from 'vue-router';
+import {defineComponent, provide} from 'vue';
 
  
 
@@ -34,11 +36,19 @@ export default defineComponent({
     },
   },
   setup: (props) => {
+     const router = useRouter(); 
+
     const formatarDataCriacao = new Date(props.repositorio.dataHoraCriacao);
     const criadoEm = format(formatarDataCriacao, 'dd/MM/yyyy HH:mm');
 
+     const verEnvelopes = (repositorioId: string) => {
+      provide('repositorioId', repositorioId);
+      router.push(`/envelopes/${repositorioId}`);
+    };
+
     return {
       criadoEm,
+      verEnvelopes
     }
   }
 
