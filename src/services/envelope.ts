@@ -12,3 +12,17 @@ export const getEnvelopes = async (values: { idRepositorio: string }) => {
     throw new Error(error as string);
   }
 }
+
+export const encaminharEnvelopeParaAssinatura = async (values: { id: string }) => {
+  const formatValues = {
+    Envelope: values
+  };
+
+  const url = 'envelopes/forward-for-signature';
+  const data = formatApiData(formatValues);
+  const response = await api.post(url, data);
+
+  return response
+
+}
+
