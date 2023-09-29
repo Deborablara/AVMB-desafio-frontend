@@ -4,7 +4,11 @@
       :rows="rows"
       :columns="columns"
       :row-key="row => row.id"
-    />
+    >
+      <template v-slot:body-cell-acoes="props">
+        <ColunaAcoes :envelope="props.row.acoes" />
+      </template>
+    </q-table>
   </div>
 </template>
 
@@ -14,12 +18,14 @@ import {formatStatus} from '../statusChip/index';
 import {formatDate} from '../../utils/date';
 import {Props} from './types';
 import { Envelope } from 'src/services/types';
+import ColunaAcoes from 'src/components/envelopesTable/colunaAcoes/index.vue';
 
 type EnvelopeRow = {
   id: string,
   descricao: string,
   criadoEm: string,
-  status: string
+  status: string,
+  acoes: Envelope,
 }
 
 const columns = [
@@ -50,11 +56,21 @@ const columns = [
     align: 'left',
     field:(row: EnvelopeRow) => row.status,
     format: (val: string) => formatStatus(val),
+  },
+  {
+    name: 'acoes',
+    label: 'Ações',
+    align: 'left',
+    field: (row: EnvelopeRow) => row.acoes,
+
   }
 ]
 
 export default defineComponent({
   name: 'EnvelopesTable',
+  components: {
+    ColunaAcoes,
+  },
   props: {
     envelopes: {
       type: Array as () => Envelope[],
@@ -69,6 +85,7 @@ export default defineComponent({
         descricao: envelope.descricao,
         criadoEm: envelope.dataHoraCriacao,
         status: envelope.status,
+        acoes: envelope,
       }));
     }
 

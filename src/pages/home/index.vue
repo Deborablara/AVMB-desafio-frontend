@@ -44,7 +44,7 @@ export default defineComponent({
 
     const fetchRepoitoriosData = async () => {
       try {
-        const response = await getReposUsuario({idProprietario: usuarioId as string});
+        const response = await getReposUsuario({idProprietario: usuarioId.value as string});
         repositorios.value = response.data.response;
 
       } catch (error) {
