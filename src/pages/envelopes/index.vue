@@ -26,6 +26,7 @@ import { getEnvelopes } from 'src/services/envelope';
 import { defineComponent, ref, watchEffect} from 'vue';
 import { useRoute } from 'vue-router';
 import EnvelopesTable from 'src/components/envelopesTable/index.vue';
+import { Envelope } from 'src/services/types';
 
 export default defineComponent({
   name: 'EnvelopesList',
@@ -37,13 +38,13 @@ export default defineComponent({
     const route = useRoute();
 
     const loadingEnvelopes = ref(true);
-    const envelopes = ref([]);
+    const envelopes = ref<Envelope[]>([]);
 
     const repositorioId =  route.params.repositorioId;
 
     const fetchEnvelopesData = async () => {
       try {
-        const {data} = await getEnvelopes({idRepositorio: repositorioId.value as string});
+        const {data} = await getEnvelopes({idRepositorio: repositorioId as string});
         envelopes.value = data.data.response;
  
 
