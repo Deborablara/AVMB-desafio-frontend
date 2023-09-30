@@ -1,12 +1,14 @@
 
 .title-container {
   margin-top: 1rem;
+  margin-bottom: 3rem;
   p {
-    margin-left: 1.8rem;
     font-size: 2em;
     color: $secondary;
     font-weight:  600;
   }
+  display:flex;
+  justify-content: space-between;
 }
 
 .loading {

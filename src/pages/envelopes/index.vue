@@ -10,6 +10,7 @@
      <div v-else>
       <div class="col-12 title-container">
         <p class="title">ENVELOPES</p>
+        <q-btn color="primary" icon="add" label="Novo envelope"/>
       </div>
       <div class="col-12">
        <EnvelopesTable :envelopes="envelopes" />
