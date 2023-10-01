@@ -133,30 +133,31 @@ export default defineComponent({
           const res = await uploadArquivo(dataForm);
           dadosDocumento.value = res.data.fileInfo;
 
-           const formatedValues: FormEnvelopeData = {
-            descricao: form.value.descricao,
-            Repositorio: {
-              id: form.value.repositorioId
-            },
-            listaDocumentos: {
-              Documento: [
-                {
-                  conteudo: dadosDocumento.value.conteudo,
-                  mimeType: dadosDocumento.value.mimeType,
-                  nomeArquivo: dadosDocumento.value.nomeArquivo
-                }
-              ]
-            }
-          };
-          
-          await novoEnvelope(formatedValues);
+          if(res.data.fileInfo) {
+            const formatedValues: FormEnvelopeData = {
+                      descricao: form.value.descricao,
+                      Repositorio: {
+                        id: form.value.repositorioId
+                      },
+                      listaDocumentos: {
+                        Documento: [
+                          {
+                            conteudo: res.data.fileInfo.conteudo,
+                            mimeType: res.data.fileInfo.mimeType,
+                            nomeArquivo: res.data.fileInfo.nomeArquivo
+                          }
+                        ]
+                      }
+                    };
+                    
+            await novoEnvelope(formatedValues);
+          }
 
-
-          notifySuccess('envelope criado com sucesso!');
+          notifySuccess('Envelope criado com sucesso!');
           props.fetchEnvelopesData();
           close();
         } catch (error) {
-          notifyError('Falha ao criar envelope')
+          notifyError('Falha ao criar envelope, entre em contato com o suporte')
         } finally {
           loadingSubmit.value = false;
         }
