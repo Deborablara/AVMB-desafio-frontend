@@ -23,13 +23,15 @@ export type Repositorio = {
 
 
 export type FormEnvelopeData = {
-  descricao: string;
-  Repositorio: Repositorio;
-  listaDocumentos: {
-    Documento: Documento[];
-  };
-  listaSignatariosEnvelope?: {
-    SignatarioEnvelope: any[];
-  };
+  Envelope: {
+    descricao: string;
+    Repositorio: Repositorio;
+    listaDocumentos: {
+      Documento: Documento[];
+    };
+    listaSignatariosEnvelope?: {
+      SignatarioEnvelope: any[];
+    };
+  }
 }
 

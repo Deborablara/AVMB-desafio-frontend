@@ -135,7 +135,8 @@ export default defineComponent({
 
           if(res.data.fileInfo) {
             const formatedValues: FormEnvelopeData = {
-                      descricao: form.value.descricao,
+                     Envelope: {
+                       descricao: form.value.descricao,
                       Repositorio: {
                         id: form.value.repositorioId
                       },
@@ -148,6 +149,7 @@ export default defineComponent({
                           }
                         ]
                       }
+                     }
                     };
                     
             await novoEnvelope(formatedValues);
