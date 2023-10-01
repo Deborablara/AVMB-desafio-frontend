@@ -2,7 +2,6 @@ import { api } from 'src/boot/axios';
 import { formatApiData } from '.';
 
 export const getRepositorio = async (values: { idRepositorio: string }) => {
-  console.log(values);
   try {
     const url = 'repositorio/id';
     const data = formatApiData(values);
