@@ -46,7 +46,7 @@ export const buscarDocumento = async (values: { envelope_id: string }) => {
 
 }
 
-export const buscarSignatarios = async (values: any) => {
+export const buscarSignatarios = async (values: { idEnvelope: string }) => {
   const url = 'envelopes/signatarios';
   const data = formatApiData(values);
   const response = await api.post(url, data);

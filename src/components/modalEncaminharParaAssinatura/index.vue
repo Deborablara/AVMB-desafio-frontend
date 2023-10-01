@@ -48,8 +48,10 @@ export default defineComponent({
       try {
         await encaminharEnvelopeParaAssinatura({ id: props.envelope.id });
         notifySuccess('Envelope encaminhado para assinatura com sucesso!');
+        close();
       } catch (error: any) {
         notifyError(`${error.response.data.error}`);
+        close();
       }
     }
 
