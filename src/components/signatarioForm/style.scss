@@ -1,0 +1,33 @@
+.cardContainer {
+  width: 100%;
+  padding: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.inputsContainer{
+  width: 100%;
+}
+
+.fileInput {
+  width: 100%;
+}
+
+.input{
+  margin-top: 30px;
+}
+
+.buttonsContainer {
+  display:flex;
+  justify-content: flex-end;
+  margin-top: 3rem;
+}
+
+.cancelarButton {
+  margin-right: 10px;
+}
+
+

@@ -1,6 +1,6 @@
 import { api } from 'src/boot/axios';
 import { formatApiData } from '.';
-import { FormEnvelopeData } from './types';
+import { FormEnvelopeData, SignatarioFormData } from './types';
 
 export const getEnvelopes = async (values: { idRepositorio: string }) => {
   try {
@@ -46,6 +46,24 @@ export const buscarDocumento = async (values: { envelope_id: string }) => {
 
 }
 
+export const buscarSignatarios = async (values: any) => {
+  const url = 'envelopes/signatarios';
+  const data = formatApiData(values);
+  const response = await api.post(url, data);
+
+  return response
+
+}
+
+
+export const adicionarSignatario = async (values: SignatarioFormData) => {
+  const url = 'envelopes/signatario';
+  const data = formatApiData(values);
+  const response = await api.post(url, data);
+
+  return response
+
+}
 
 export const uploadArquivo = async (data: FormData) => {
   const url = 'envelopes/upload';

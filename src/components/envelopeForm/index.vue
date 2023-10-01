@@ -55,6 +55,13 @@ import { novoEnvelope, uploadArquivo } from 'src/services/envelope';
 const { notifySuccess, notifyError } = useNotify();
 
 
+type formDefaultValues = {
+    descricao: string;
+    repositorioId: string;
+    repositorioNome: string | undefined;
+}
+
+
 
 export default defineComponent({
   name: 'EnvelopeForm',
@@ -84,7 +91,8 @@ export default defineComponent({
     });
     const loadingSubmit = ref(false);
 
-    const formDefaultValues = {
+
+    const formDefaultValues: formDefaultValues = {
       descricao: '',
       repositorioId: props.repositorio.id,
       repositorioNome: props.repositorio.nome,

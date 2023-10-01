@@ -35,3 +35,15 @@ export type FormEnvelopeData = {
   }
 }
 
+
+export type SignatarioFormData = {
+  SignatarioEnvelope: {
+    Envelope: {
+      id: string;
+    };
+    ConfigAssinatura: {
+      emailSignatario: string;
+      nomeSignatario: string;
+    };
+  };
+}

@@ -14,7 +14,12 @@
         </template>
       <q-tooltip>Fazer download do documento</q-tooltip>
     </q-btn>
-    <q-btn flat round color="primary" icon="people">
+    <q-btn
+      flat round 
+      color="primary" 
+      icon="people"
+      @click="toggleModalSignatarios"
+    >
       <q-tooltip>Signatários</q-tooltip>
     </q-btn>
     <q-btn
@@ -29,6 +34,7 @@
     </q-btn>
   </td>
     <ModalEncaminharParaAssinatura  ref="openModalEncaminharAssinatura" :envelope="envelope"/>
+    <SignatariosModal ref="openModalSignatarios" :envelope="envelope"/>
 </template>
 
 <script lang="ts">
@@ -37,6 +43,7 @@ import { Props } from './types';
 import { Envelope } from 'src/services/types';
 import useNotify from 'src/composables/useNotify';
 import ModalEncaminharParaAssinatura from '../../modalEncaminharParaAssinatura/index.vue';
+import SignatariosModal from '../../signatarioForm/index.vue';
 import { downloadDocumento } from 'src/utils/downloadDocumento';
 
 const {notifyError} = useNotify();
@@ -45,6 +52,7 @@ export default defineComponent({
   name: 'ColunaAcoes',
   components: {
     ModalEncaminharParaAssinatura,
+    SignatariosModal,
   },
   props: {
     envelope: {
@@ -55,12 +63,17 @@ export default defineComponent({
   setup(props: Props) {
     const envelope = ref(props.envelope);
     const openModalEncaminharAssinatura = ref();
+    const openModalSignatarios = ref();
     const loadingDownload = ref(false);
     const disableEncaminhaParaAssinatura = ref(props.envelope.status !== '1');
     const disableDownloadDocumento = ref(props.envelope.status !== '3')
 
     const toggleModalEncaminharParaAssinatura = () => {
       openModalEncaminharAssinatura.value.open();
+    }
+
+     const toggleModalSignatarios = () => {
+      openModalSignatarios.value.openModal();
     }
 
 
@@ -85,6 +98,8 @@ export default defineComponent({
       disableDownloadDocumento,
       loadingDownload,
       fetchDocumento,
+      toggleModalSignatarios,
+      openModalSignatarios,
     };
   },
 });

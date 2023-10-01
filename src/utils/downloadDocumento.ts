@@ -10,10 +10,7 @@ export const downloadDocumento = async (envelope: Envelope) => {
 
 
     if (response) {
-      console.log('entrei');
       const { nome_arquivo, conteudo, mimeType } = response.data.data;
-
-      console.log(response.data.data);
 
       const byteCharacters = atob(conteudo);
       const byteNumbers = new Array(byteCharacters.length);
