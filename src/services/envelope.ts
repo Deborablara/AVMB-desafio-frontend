@@ -37,6 +37,15 @@ export const novoEnvelope = async (values: FormEnvelopeData) => {
 
 }
 
+export const buscarDocumento = async (values: { envelope_id: string }) => {
+  const url = 'envelopes/documento';
+  const data = formatApiData(values);
+  const response = await api.post(url, data);
+
+  return response
+
+}
+
 
 export const uploadArquivo = async (data: FormData) => {
   const url = 'envelopes/upload';
