@@ -29,7 +29,7 @@ export type FormEnvelopeData = {
     Documento: Documento[];
   };
   listaSignatariosEnvelope?: {
-    SignatarioEnvelope: never[];
+    SignatarioEnvelope: any[];
   };
 }
 

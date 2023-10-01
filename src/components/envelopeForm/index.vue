@@ -49,7 +49,7 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import useNotify from 'src/composables/useNotify';
-import { Envelope, Repositorio } from 'src/services/types';
+import { Envelope, FormEnvelopeData, Repositorio } from 'src/services/types';
 import { novoEnvelope, uploadArquivo } from 'src/services/envelope';
 
 const { notifySuccess, notifyError } = useNotify();
@@ -119,7 +119,7 @@ export default defineComponent({
     };
 
 
-    const  handleSubmit = async (filesInput: {files: Array}) => {
+    const  handleSubmit = async (filesInput: any) => {
       if (filesInput && filesInput.files.length > 0) {
         const dataForm = new FormData();
 
@@ -133,27 +133,23 @@ export default defineComponent({
           const res = await uploadArquivo(dataForm);
           dadosDocumento.value = res.data.fileInfo;
 
-           const formatedValues = {
-            Envelope: {
-              descricao: form.value.descricao,
-              Repositorio: {
-                id: form.value.repositorioId
-              },
-              listaDocumentos: {
-                Documento: [
-                  {
-                    conteudo: dadosDocumento.value.conteudo,
-                    mimeType: dadosDocumento.value.mimeType,
-                    nomeArquivo: dadosDocumento.value.nomeArquivo
-                  }
-                ]
-              },
-              listaSignatariosEnvelope: {
-                SignatarioEnvelope: [],
-              }
+           const formatedValues: FormEnvelopeData = {
+            descricao: form.value.descricao,
+            Repositorio: {
+              id: form.value.repositorioId
+            },
+            listaDocumentos: {
+              Documento: [
+                {
+                  conteudo: dadosDocumento.value.conteudo,
+                  mimeType: dadosDocumento.value.mimeType,
+                  nomeArquivo: dadosDocumento.value.nomeArquivo
+                }
+              ]
             }
           };
-           await novoEnvelope(formatedValues);
+          
+          await novoEnvelope(formatedValues);
 
 
           notifySuccess('envelope criado com sucesso!');
