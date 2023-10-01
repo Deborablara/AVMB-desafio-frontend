@@ -26,3 +26,17 @@ export const encaminharEnvelopeParaAssinatura = async (values: { id: string }) =
 
 }
 
+
+export const uploadArquivo = async (data: FormData) => {
+  const url = 'upload';
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  };
+  const response = await api.post(url, data, config);
+
+  return response
+
+}
+

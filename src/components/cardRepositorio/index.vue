@@ -36,7 +36,7 @@ export default defineComponent({
     },
   },
   setup: (props) => {
-     const router = useRouter(); 
+    const router = useRouter(); 
 
     const formatarDataCriacao = new Date(props.repositorio.dataHoraCriacao);
     const criadoEm = format(formatarDataCriacao, 'dd/MM/yyyy HH:mm');
