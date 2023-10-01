@@ -1,5 +1,6 @@
 import { api } from 'src/boot/axios';
 import { formatApiData } from '.';
+import { FormEnvelopeData } from './types';
 
 export const getEnvelopes = async (values: { idRepositorio: string }) => {
   try {
@@ -27,8 +28,18 @@ export const encaminharEnvelopeParaAssinatura = async (values: { id: string }) =
 }
 
 
+export const novoEnvelope = async (values: FormEnvelopeData) => {
+  const url = 'envelopes/new';
+  const data = formatApiData(values);
+  const response = await api.post(url, data);
+
+  return response
+
+}
+
+
 export const uploadArquivo = async (data: FormData) => {
-  const url = 'upload';
+  const url = 'envelopes/upload';
   const config = {
     headers: {
       'Content-Type': 'multipart/form-data',

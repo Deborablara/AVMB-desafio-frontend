@@ -16,7 +16,7 @@
        <EnvelopesTable :envelopes="envelopes" />
       </div>
     </div>
-    <EnvelopeForm  ref="openModalEnvelopeForm" :repositorio="repositorio"/>
+    <EnvelopeForm  ref="openModalEnvelopeForm" :repositorio="repositorio" :fetchEnvelopesData="fetchEnvelopesData"/>
   </q-page>
 </template>
 
@@ -91,7 +91,8 @@ export default defineComponent({
       envelopes,
       repositorio,
       toggleModalEnvelopeForm,
-      openModalEnvelopeForm
+      openModalEnvelopeForm,
+      fetchEnvelopesData
     }
   }
   }

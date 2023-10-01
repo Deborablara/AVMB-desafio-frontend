@@ -10,7 +10,7 @@
               v-model="form.descricao" 
               label="Descrição"
               :dense="dense" 
-              :rules="[val => (vall && val !== '') || 'Insira a descrição do envelope']"
+              :rules="[val => (val && val !== '') || 'Insira a descrição do envelope']"
             />
             <q-input
              v-model="form.repositorioNome"
@@ -28,7 +28,16 @@
             <input type="file" name="file" multiple ref="files" />
             <div class="buttonsContainer input">
               <q-btn color="primary" outline label="Cancelar" class="cancelarButton" @click="close"/> 
-              <q-btn color="primary" label="Salvar" @click="handleSubmit($refs.files)" />
+                  <q-btn
+                   @click="handleSubmit($refs.files)"
+                    :loading="loadingSubmit"
+                    label="Salvar"
+                    color="primary"
+                  >
+                    <template v-slot:loading>
+                      <q-spinner-facebook />
+                    </template>
+                  </q-btn>
             </div>
           </template>
       </q-card-section>
@@ -38,15 +47,13 @@
 
 
 <script lang="ts">
-import { ref, defineComponent, inject } from 'vue';
+import { ref, defineComponent } from 'vue';
 import useNotify from 'src/composables/useNotify';
-import { Envelope } from 'src/services/types';
-import { uploadArquivo } from 'src/services/envelope';
+import { Envelope, Repositorio } from 'src/services/types';
+import { novoEnvelope, uploadArquivo } from 'src/services/envelope';
 
 const { notifySuccess, notifyError } = useNotify();
-    const repositorio = inject('repositorio');
 
-    console.log(repositorio);
 
 
 export default defineComponent({
@@ -57,7 +64,11 @@ export default defineComponent({
       required: true,
     },
     repositorio: {
-      type: Object as () => any,
+      type: Object as () => Repositorio,
+      required: true,
+    },
+    fetchEnvelopesData: {
+      type:  Function as  () => void,
       required: true,
     }
   },
@@ -66,13 +77,19 @@ export default defineComponent({
     const dense = ref(false);
     const currentStep = ref('input'); 
     const currentStepTitle = ref('Novo envelope');
+    const dadosDocumento = ref({
+      conteudo: '',
+      mimeType: '',
+      nomeArquivo: '',
+    });
+    const loadingSubmit = ref(false);
 
     const formDefaultValues = {
       descricao: '',
       repositorioId: props.repositorio.id,
       repositorioNome: props.repositorio.nome,
-      file: null,
     };
+
     const form = ref(formDefaultValues);
 
   
@@ -102,18 +119,50 @@ export default defineComponent({
     };
 
 
-    const  handleSubmit = async (filesInput: any) => {
+    const  handleSubmit = async (filesInput: {files: Array}) => {
       if (filesInput && filesInput.files.length > 0) {
         const dataForm = new FormData();
+
         for (const file of filesInput.files) {
           dataForm.append('file', file);
         }
 
         try {
+          loadingSubmit.value = true;
+
           const res = await uploadArquivo(dataForm);
-          notifySuccess(`${res.data}`);
+          dadosDocumento.value = res.data.fileInfo;
+
+           const formatedValues = {
+            Envelope: {
+              descricao: form.value.descricao,
+              Repositorio: {
+                id: form.value.repositorioId
+              },
+              listaDocumentos: {
+                Documento: [
+                  {
+                    conteudo: dadosDocumento.value.conteudo,
+                    mimeType: dadosDocumento.value.mimeType,
+                    nomeArquivo: dadosDocumento.value.nomeArquivo
+                  }
+                ]
+              },
+              listaSignatariosEnvelope: {
+                SignatarioEnvelope: [],
+              }
+            }
+          };
+           await novoEnvelope(formatedValues);
+
+
+          notifySuccess('envelope criado com sucesso!');
+          props.fetchEnvelopesData();
+          close();
         } catch (error) {
-          console.log(error);
+          notifyError('Falha ao criar envelope')
+        } finally {
+          loadingSubmit.value = false;
         }
       } else {
         notifyError('Selecione pelo menos um documento antes de salvar.');
@@ -132,6 +181,7 @@ export default defineComponent({
       close,
       advanceToUpload,
       handleSubmit,
+      loadingSubmit
     };
   },
 });
