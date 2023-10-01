@@ -6,7 +6,12 @@
       </q-card-section>
       <q-card-section class="inputsContainer">
           <template v-if="currentStep === 'input'">
-            <q-input v-model="form.descricao" label="Descrição" :dense="dense" />
+            <q-input
+              v-model="form.descricao" 
+              label="Descrição"
+              :dense="dense" 
+              :rules="[val => (vall && val !== '') || 'Insira a descrição do envelope']"
+            />
             <q-input
              v-model="form.repositorioNome"
               label="Repositório destino"
@@ -88,25 +93,31 @@ export default defineComponent({
     };
 
     const advanceToUpload = () => {
-      currentStep.value = 'upload';
-      currentStepTitle.value = 'Upload do documento';
+      if (form.value.descricao && form.value.descricao !== '') {
+        currentStep.value = 'upload';
+        currentStepTitle.value = 'Upload do documento';
+      } else {
+        notifyError('Por favor, preencha a descrição antes de avançar.');
+      }
     };
 
+
     const  handleSubmit = async (filesInput: any) => {
-      const dataForm = new FormData();
-      for (const file of filesInput.files) {
-        dataForm.append('file', file);
+      if (filesInput && filesInput.files.length > 0) {
+        const dataForm = new FormData();
+        for (const file of filesInput.files) {
+          dataForm.append('file', file);
+        }
+
+        try {
+          const res = await uploadArquivo(dataForm);
+          notifySuccess(`${res.data}`);
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        notifyError('Selecione pelo menos um documento antes de salvar.');
       }
-
-      try {
-        const  res = await uploadArquivo(dataForm);
-        notifySuccess(`${res.data}`);
-      } catch (error){
-        console.log(error);
-      }
-
-
-
     };
 
     context.expose({ open, close });
