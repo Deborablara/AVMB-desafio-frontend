@@ -8,6 +8,11 @@
         />
     </div>
      <div v-else>
+        <q-btn
+          color="primary"
+          icon="arrow_back" 
+          @click="voltarParaRepositoriosPage"
+        />
       <div class="col-12 title-container">
         <p class="title">ENVELOPES</p>
         <q-btn color="primary" icon="add" label="Novo envelope" @click="toggleModalEnvelopeForm"/>
@@ -20,13 +25,12 @@
   </q-page>
 </template>
 
-
 <script lang="ts">
 import useNotify from 'src/composables/useNotify';
 import { getEnvelopes } from 'src/services/envelope';
 import {getRepositorio} from 'src/services/repositorio';
 import { defineComponent, ref, watchEffect} from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import EnvelopesTable from 'src/components/envelopesTable/index.vue';
 import EnvelopeForm from 'src/components/envelopeForm/index.vue';
 import { Envelope } from 'src/services/types';
@@ -40,6 +44,7 @@ export default defineComponent({
    setup () {
     const {notifyError} = useNotify();
     const route = useRoute();
+    const router = useRouter();
 
     const loadingEnvelopes = ref(true);
     const envelopes = ref<Envelope[]>([]);
@@ -50,6 +55,10 @@ export default defineComponent({
 
     const toggleModalEnvelopeForm = () => {
       openModalEnvelopeForm.value.open();
+    }
+
+      const voltarParaRepositoriosPage = () => {
+      router.push('/');
     }
 
     const fetchEnvelopesData = async () => {
@@ -92,7 +101,8 @@ export default defineComponent({
       repositorio,
       toggleModalEnvelopeForm,
       openModalEnvelopeForm,
-      fetchEnvelopesData
+      fetchEnvelopesData,
+      voltarParaRepositoriosPage
     }
   }
   }
