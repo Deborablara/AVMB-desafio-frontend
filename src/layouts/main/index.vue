@@ -3,11 +3,11 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title class="logo-container">
-           <img src="../../assets/img/logo-avmb.png" alt="Minha Figura">
+          <img src="../../assets/img/logo-avmb.png" alt="Minha Figura">
         </q-toolbar-title>
         <div>
-          {{ usuario?.nome}}
-          <q-icon name="account_circle" size="sm" class="iconeUsuario"/>
+          {{ usuario?.nome }}
+          <q-icon name="account_circle" size="sm" class="iconeUsuario" />
         </div>
       </q-toolbar>
     </q-header>
@@ -26,8 +26,8 @@ import { Usuario } from '../../services/types';
 
 export default defineComponent({
   name: 'MainLayout',
-  setup () {
-    const {notifySuccess, notifyError} = useNotify();
+  setup() {
+    const { notifySuccess, notifyError } = useNotify();
 
     const usuarioId = ref('');
     const usuario = ref<Usuario | null>(null);
@@ -42,30 +42,23 @@ export default defineComponent({
         usuario.value = dadosResponse.data;
 
         notifySuccess(`Bem-vindo(a) ${usuario?.value?.nome}`);
-
       } catch (error) {
         notifyError('Erro ao buscar usuário');
       }
     };
 
     onMounted(() => {
-      fetchUsuarioData(); 
+      fetchUsuarioData();
     });
-
 
     return {
       usuario,
       usuarioId
     }
   }
-
-  
 });
-
-
 </script>
 
 <style lang="scss">
   @import './style.scss';
 </style>
-

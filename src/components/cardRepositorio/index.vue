@@ -4,13 +4,13 @@
       <div class="card-header">
         <div class="container-title">
           <p class="card-title">{{ repositorio.nome }}</p>
-          <p class="create-at">{{criadoEm}}</p>
+          <p class="create-at">{{ criadoEm }}</p>
         </div>
       </div>
       <div class="button-container">
-        <q-btn 
+        <q-btn
           color="primary"
-          label="Ver envelopes" 
+          label="Ver envelopes"
           class="button"
           icon="mail"
           @click="verEnvelopes(repositorio.id)"
@@ -21,11 +21,9 @@
 </template>
 
 <script lang="ts">
-import { format } from 'date-fns';
 import { useRouter } from 'vue-router';
-import {defineComponent, provide} from 'vue';
-
- 
+import { defineComponent, provide } from 'vue';
+import { formatDate } from 'src/utils/date';
 
 export default defineComponent({
   name: 'CardRepositorio',
@@ -36,27 +34,23 @@ export default defineComponent({
     },
   },
   setup: (props) => {
-    const router = useRouter(); 
+    const router = useRouter();
 
-    const formatarDataCriacao = new Date(props.repositorio.dataHoraCriacao);
-    const criadoEm = format(formatarDataCriacao, 'dd/MM/yyyy HH:mm');
+    const criadoEm = formatDate(props.repositorio.dataHoraCriacao);
 
-     const verEnvelopes = (repositorioId: string) => {
+    const verEnvelopes = (repositorioId: string) => {
       provide('repositorioId', repositorioId);
       router.push(`/envelopes/${repositorioId}`);
     };
 
     return {
       criadoEm,
-      verEnvelopes
-    }
-  }
-
+      verEnvelopes,
+    };
+  },
 });
 </script>
 
 <style lang="scss">
   @import './style.scss';
 </style>
-
-

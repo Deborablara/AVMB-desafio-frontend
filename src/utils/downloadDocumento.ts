@@ -2,7 +2,7 @@ import useNotify from 'src/composables/useNotify';
 import { buscarDocumento } from 'src/services/envelope';
 import { Envelope } from 'src/services/types';
 
-const { notifyError } = useNotify();
+const { notifyError, notifySuccess } = useNotify();
 
 export const downloadDocumento = async (envelope: Envelope) => {
   try {
@@ -32,6 +32,8 @@ export const downloadDocumento = async (envelope: Envelope) => {
       document.body.removeChild(a);
 
       URL.revokeObjectURL(url);
+
+      notifySuccess('Aguarde um instante, o download do documento será feito')
     } else {
       notifyError('Erro ao buscar documento');
     }

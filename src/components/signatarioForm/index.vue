@@ -4,18 +4,18 @@
       <q-card-section>
         <p class="modalTitle">Signatários do Envelope</p>
       </q-card-section>
-       <q-card-section class="loading" v-if="loading" >
-          <q-spinner 
-              color="primary"
-              size="3em"
-              :thickness="2" 
-            />
+      <q-card-section class="loading" v-if="loading">
+        <q-spinner
+          color="primary"
+          size="3em"
+          :thickness="2"
+        />
       </q-card-section>
-      <q-card-section >
+      <q-card-section>
         <div v-if="signatarios?.length > 0">
           <ul>
             <li v-for="(signatario, index) in signatarios" :key="index">
-              {{ signatario.ConfigAssinatura.nomeSignatario}} - {{ signatario.ConfigAssinatura.emailSignatario }}
+              {{ signatario.ConfigAssinatura.nomeSignatario }} - {{ signatario.ConfigAssinatura.emailSignatario }}
             </li>
           </ul>
         </div>
@@ -24,30 +24,30 @@
         </div>
       </q-card-section>
       <q-card-actions class="buttonsContainer">
-        <q-btn @click="close" label="Cancelar" color="primary" outline/>
-        <q-btn @click="toggleAdicionarSignatario" label="Adicionar Signatário" icon="add" color="primary"/>
+        <q-btn @click="close" label="Cancelar" color="primary" outline />
+        <q-btn @click="toggleAdicionarSignatario" label="Adicionar Signatário" icon="add" color="primary" />
       </q-card-actions>
     </q-card>
   </q-dialog>
 
-   <q-dialog v-model="showAdicionarSignatario">
+  <q-dialog v-model="showAdicionarSignatario">
     <q-card class="cardContainer">
       <q-card-section>
         <p class="modalTitle">Adicionar Signatário</p>
       </q-card-section>
       <q-card-section>
-        <q-input 
-        v-model="signatario.nome"
-         label="Nome do Signatário"
-        :rules="[val => (val && val !== '') || 'Nome do signatário é obrigatório']"
-          />
         <q-input
-         v-model="signatario.email" 
-         label="Email do Signatário" 
+          v-model="signatario.nome"
+          label="Nome do Signatário"
+          :rules="[val => (val && val !== '') || 'Nome do signatário é obrigatório']"
+        />
+        <q-input
+          v-model="signatario.email"
+          label="Email do Signatário"
           :rules="[val => (val && val !== '') || 'Email do signatário é obrigatório']"
-         class="input"
-         type="email"
-         />
+          class="input"
+          type="email"
+        />
       </q-card-section>
       <q-card-actions class="buttonsContainer">
         <q-btn @click="closeAdicionarSignatario" label="Cancelar" color="primary" outline />
@@ -57,22 +57,23 @@
   </q-dialog>
 </template>
 
-
 <script lang="ts">
 import { ref, defineComponent, watchEffect } from 'vue';
 import useNotify from 'src/composables/useNotify';
-import { Envelope} from 'src/services/types';
-import { buscarSignatarios, adicionarSignatario} from 'src/services/envelope';
+import { Envelope } from 'src/services/types';
+import { buscarSignatarios, adicionarSignatario } from 'src/services/envelope';
 
 const { notifySuccess, notifyError } = useNotify();
-
-
 
 export default defineComponent({
   name: 'SignatariosModal',
   props: {
     envelope: {
       type: Object as () => Envelope,
+      required: true,
+    },
+    fetchEnvelopesData: {
+      type: Function as () => void,
       required: true,
     },
   },
@@ -85,7 +86,6 @@ export default defineComponent({
       nome: '',
       email: ''
     });
-
 
     const openModal = () => {
       show.value = true;
@@ -104,10 +104,10 @@ export default defineComponent({
       showAdicionarSignatario.value = false;
     };
 
-     const fetchSignatariosData = async () => {
+    const fetchSignatariosData = async () => {
       loading.value = true;
       try {
-        const {data} = await buscarSignatarios({idEnvelope: props.envelope.id as string});
+        const { data } = await buscarSignatarios({ idEnvelope: props.envelope.id as string });
         signatarios.value = data.data.response;
       } catch (error) {
         notifyError('Erro ao buscar envelope');
@@ -117,39 +117,37 @@ export default defineComponent({
     };
 
     const adicionarNovoSignatario = async () => {
-       if (!signatario.value.nome || !signatario.value.email) {
-         notifyError('Preencha os campos');
+      if (!signatario.value.nome || !signatario.value.email) {
+        notifyError('Preencha os campos');
       } else {
         const data = {
-          SignatarioEnvelope:{
-            Envelope:{
-                id: props.envelope.id,
+          SignatarioEnvelope: {
+            Envelope: {
+              id: props.envelope.id,
             },
-            ConfigAssinatura:{
-                emailSignatario: signatario.value.email,
-                nomeSignatario:signatario.value.nome
-                    
+            ConfigAssinatura: {
+              emailSignatario: signatario.value.email,
+              nomeSignatario: signatario.value.nome
             }
           }
-        }
+        };
 
         try {
           await adicionarSignatario(data);
+          props.fetchEnvelopesData();
           closeAdicionarSignatario();
-          notifySuccess('signatário adicionado com sucesso!');
+          notifySuccess('Signatário adicionado com sucesso!');
         } catch (error) {
           notifyError('Falha ao adicionar signatario, entre em contato com o suporte');
         }
-
-
       }
     };
 
-     watchEffect(() => {
-    if (props.envelope.id && show.value) {
-      fetchSignatariosData();
-    }
-  });
+    watchEffect(() => {
+      if (props.envelope.id && show.value) {
+        fetchSignatariosData();
+      }
+    });
 
     context.expose({ openModal, close });
 

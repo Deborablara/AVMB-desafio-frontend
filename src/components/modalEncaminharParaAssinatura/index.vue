@@ -31,6 +31,10 @@ export default defineComponent({
       type: Object as () => Envelope,
       required: true,
     },
+     fetchEnvelopesData: {
+      type: Function as () => void,
+      required: true,
+    },
   },
   setup(props, context) {
     const show = ref(false);
@@ -43,11 +47,11 @@ export default defineComponent({
       show.value = false;
     }
 
-
     const encaminharParaAssinatura = async () => {
       try {
         await encaminharEnvelopeParaAssinatura({ id: props.envelope.id });
         notifySuccess('Envelope encaminhado para assinatura com sucesso!');
+        props.fetchEnvelopesData();
         close();
       } catch (error: any) {
         notifyError(`${error.response.data.error}`);

@@ -1,35 +1,34 @@
 <template>
   <q-page>
-    <div class="loading" v-if="loadingEnvelopes" >
-       <q-spinner 
-          color="primary"
-          size="3em"
-          :thickness="2" 
-        />
+    <div class="loading" v-if="loadingEnvelopes">
+      <q-spinner color="primary" size="3em" :thickness="2" />
     </div>
-     <div v-else>
-        <q-btn
-          color="primary"
-          icon="arrow_back" 
-          @click="voltarParaRepositoriosPage"
-        />
+    <div v-else>
+      <q-btn color="primary" icon="arrow_back" @click="voltarParaRepositoriosPage" />
       <div class="col-12 title-container">
         <p class="title">ENVELOPES</p>
-        <q-btn color="primary" icon="add" label="Novo envelope" @click="toggleModalEnvelopeForm"/>
+        <q-btn color="primary" icon="add" label="Novo envelope" @click="toggleModalEnvelopeForm" />
       </div>
       <div class="col-12">
-       <EnvelopesTable :envelopes="envelopes" />
+        <EnvelopesTable 
+          :envelopes="envelopes" 
+          :fetchEnvelopesData="fetchEnvelopesData" 
+        />
       </div>
     </div>
-    <EnvelopeForm  ref="openModalEnvelopeForm" :repositorio="repositorio" :fetchEnvelopesData="fetchEnvelopesData"/>
+    <EnvelopeForm 
+      ref="openModalEnvelopeForm" 
+      :repositorio="repositorio" 
+      :fetchEnvelopesData="fetchEnvelopesData" 
+    />
   </q-page>
 </template>
 
 <script lang="ts">
 import useNotify from 'src/composables/useNotify';
 import { getEnvelopes } from 'src/services/envelope';
-import {getRepositorio} from 'src/services/repositorio';
-import { defineComponent, ref, watchEffect} from 'vue';
+import { getRepositorio } from 'src/services/repositorio';
+import { defineComponent, ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import EnvelopesTable from 'src/components/envelopesTable/index.vue';
 import EnvelopeForm from 'src/components/envelopeForm/index.vue';
@@ -37,12 +36,12 @@ import { Envelope } from 'src/services/types';
 
 export default defineComponent({
   name: 'EnvelopesList',
-   components: {
+  components: {
     EnvelopesTable,
-    EnvelopeForm, 
+    EnvelopeForm,
   },
-   setup () {
-    const {notifyError} = useNotify();
+  setup() {
+    const { notifyError } = useNotify();
     const route = useRoute();
     const router = useRouter();
 
@@ -51,22 +50,20 @@ export default defineComponent({
     const repositorio = ref();
     const openModalEnvelopeForm = ref();
 
-    const repositorioId =  route.params.repositorioId;
+    const repositorioId = route.params.repositorioId;
 
     const toggleModalEnvelopeForm = () => {
       openModalEnvelopeForm.value.open();
-    }
+    };
 
-      const voltarParaRepositoriosPage = () => {
+    const voltarParaRepositoriosPage = () => {
       router.push('/');
-    }
+    };
 
     const fetchEnvelopesData = async () => {
       try {
-        const {data} = await getEnvelopes({idRepositorio: repositorioId as string});
+        const { data } = await getEnvelopes({ idRepositorio: repositorioId as string });
         envelopes.value = data.data.response;
- 
-
       } catch (error) {
         notifyError('Erro ao buscar usuário');
       } finally {
@@ -74,12 +71,10 @@ export default defineComponent({
       }
     };
 
-      const fetchRepositorioData = async () => {
+    const fetchRepositorioData = async () => {
       try {
-        const {data} = await getRepositorio({idRepositorio: repositorioId as string});
+        const { data } = await getRepositorio({ idRepositorio: repositorioId as string });
         repositorio.value = data.data.response;
- 
-
       } catch (error) {
         notifyError('Erro ao buscar repositório');
       } finally {
@@ -87,13 +82,12 @@ export default defineComponent({
       }
     };
 
-   watchEffect(() => {
-    if (repositorioId) {
-      fetchRepositorioData();
-      fetchEnvelopesData();
-    }
-  });
-
+    watchEffect(() => {
+      if (repositorioId) {
+        fetchRepositorioData();
+        fetchEnvelopesData();
+      }
+    });
 
     return {
       loadingEnvelopes,
@@ -102,16 +96,12 @@ export default defineComponent({
       toggleModalEnvelopeForm,
       openModalEnvelopeForm,
       fetchEnvelopesData,
-      voltarParaRepositoriosPage
-    }
-  }
-  }
-);
+      voltarParaRepositoriosPage,
+    };
+  },
+});
 </script>
-
 
 <style lang="scss">
   @import './styles.scss';
 </style>
-
-
