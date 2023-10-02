@@ -15,6 +15,7 @@ Um guia passo a passo sobre como instalar o projeto.
    - yarn (para baixar as dependencias do projeto)
      
 4. **Depois de configurar com os passos acima:**
+   - **CERTIFIQUE-SE DE QUE A API BACKEND ESTEJA RODANDO**
    - rode o comando **yarn dev** para iniciar o servidor
    - Acesse no navegador a url **http://localhost:3000/** para ter acesso ao frontend
 
